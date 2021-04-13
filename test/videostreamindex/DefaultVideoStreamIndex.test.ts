@@ -1248,6 +1248,11 @@ describe('DefaultVideoStreamIndex', () => {
       bitrate2.sourceStreamId = 2;
       bitrate2.avgBitrateBps = 150 * 1000;
       bitrateFrame.bitrates.push(bitrate2);
+      // smaller bps
+      const bitrate4 = SdkBitrate.create();
+      bitrate4.sourceStreamId = 3;
+      bitrate4.avgBitrateBps = 800;
+      bitrateFrame.bitrates.push(bitrate4);
       // a random extra stream id
       const bitrate3 = SdkBitrate.create();
       bitrate3.sourceStreamId = 5;
@@ -1272,6 +1277,13 @@ describe('DefaultVideoStreamIndex', () => {
             mediaType: SdkStreamMediaType.VIDEO,
           }),
           new SdkStreamDescriptor({
+            streamId: 3,
+            groupId: 1,
+            maxBitrateKbps: 800,
+            attendeeId: 'a0fa',
+            mediaType: SdkStreamMediaType.VIDEO,
+          }),
+          new SdkStreamDescriptor({
             streamId: 4,
             groupId: 399,
             maxBitrateKbps: 800,
@@ -1285,15 +1297,17 @@ describe('DefaultVideoStreamIndex', () => {
       expect(index.remoteStreamDescriptions().length).to.equal(0);
       index.integrateIndexFrame(indexFrame);
       let remoteDescriptions = index.remoteStreamDescriptions();
-      expect(remoteDescriptions.length).to.equal(3);
+      expect(remoteDescriptions.length).to.equal(4);
       expect(remoteDescriptions[0].avgBitrateKbps).to.equal(1111);
       expect(remoteDescriptions[1].avgBitrateKbps).to.equal(0);
+      expect(remoteDescriptions[2].avgBitrateKbps).to.equal(0);
       expect(remoteDescriptions[2].avgBitrateKbps).to.equal(0);
       index.integrateBitratesFrame(bitrateFrame);
       remoteDescriptions = index.remoteStreamDescriptions();
       expect(remoteDescriptions[0].avgBitrateKbps).to.equal(1280);
       expect(remoteDescriptions[1].avgBitrateKbps).to.equal(150);
-      expect(remoteDescriptions[2].avgBitrateKbps).to.equal(0);
+      expect(remoteDescriptions[2].avgBitrateKbps).to.equal(1);
+      expect(remoteDescriptions[3].avgBitrateKbps).to.equal(0);
     });
   });
 

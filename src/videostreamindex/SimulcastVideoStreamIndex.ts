@@ -130,7 +130,7 @@ export default class SimulcastVideoStreamIndex extends DefaultVideoStreamIndex {
         if (
           avgBitrateKbps === SimulcastVideoStreamIndex.NOT_SENDING_STREAM_BITRATE &&
           this._lastBitRateMsgTime - this._localStreamInfos[i].timeEnabled >
-          SimulcastVideoStreamIndex.BitratesMsgFrequencyMs
+            SimulcastVideoStreamIndex.BitratesMsgFrequencyMs
         ) {
           this._localStreamInfos[i].disabledByWebRTC = true;
         }
